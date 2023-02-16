@@ -1,14 +1,31 @@
-version: 2.1
+version: 4.3
+
+orbs:
+  android: circleci/android@2.0.0
+
 jobs:
   build:
     working_directory: ~/repo
-    docker:
-      - image: cimg/node:18.10.0
+    executor:
+      name: android/default
+      tag: '30'
     steps:
       - checkout
       - run:
           name: Install Dependencies
-          command: npm install
+          command: |
+            nvm install --lts
+            nvm use --lts
+            echo y | android-sdk-linux/tools/bin/sdkmanager "platforms;android-30" "build-tools;30.0.3" "platform-tools"
+            echo y | android-sdk-linux/tools/bin/sdkmanager --licenses
+            echo y | android-sdk-linux/tools/bin/sdkmanager --update
+            echo y | android-sdk-linux/tools/bin/sdkmanager --list
       - run:
           name: Run tests
           command: npm run test
+      - run:
+          name: Build APK
+          command: npx react-native run-android --variant=release
+      - store_artifacts:
+          path: android/app/build/outputs/apk/release/app-release.apk
+          destination: app-release.apk
