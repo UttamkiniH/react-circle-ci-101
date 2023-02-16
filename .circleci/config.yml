@@ -7,7 +7,7 @@ jobs:
     steps:
       - checkout
       - run: npx envinfo
-      - run: cd darkknight && yarn install
+      - run: yarn install
       # daemon mode has bug on circleCI
       - run: cd darkknight/android && chmod +x gradlew && ./gradlew --no-daemon bundleRelease assembleRelease
       - run: cd darkknight/android/app/build/outputs/apk/release && ls && pwd
