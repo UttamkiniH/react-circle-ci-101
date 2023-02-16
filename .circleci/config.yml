@@ -1,63 +1,25 @@
 version: 2.1
 jobs:
-  node:
+  android:
     working_directory: ~/darkknight
     docker:
-      - image: cimg/node:18.10.0
-
+      - image: reactnativecommunity/react-native-android
     steps:
       - checkout
-
-      - restore_cache:
-          key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
-
-      - restore_cache:
-          key: node-v1-{{ checksum "package.json" }}-{{ arch }}
-
-      - run: yarn install
-
-      - save_cache:
-          key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
-          paths:
-            - ~/.cache/yarn
-
-      - save_cache:
-          key: node-v1-{{ checksum "package.json" }}-{{ arch }}
-          paths:
-            - node_modules
-            
-  android-build-and-test:
-    working_directory: ~/darkknight/android
-    docker:
-      - image: circleci/android:api-29-node
-    steps:
-      - checkout:
-          path: ~/darkknight
-
-      - attach_workspace:
-          at: ~/darkknight
-
-      - restore_cache:
-          key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
-
-      - run: bundle install
-
-      - save_cache:
-          key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
-          paths:
-            - vendor/bundle
-
-      - store_test_results:
-          path: test-results
-
+      - run: npx envinfo
+      - run: cd darkknight && yarn install
+      # daemon mode has bug on circleCI
+      - run: cd darkknight/android && chmod +x gradlew && ./gradlew --no-daemon bundleRelease assembleRelease
+      - run: cd darkknight/android/app/build/outputs/apk/release && ls && pwd
       - store_artifacts:
-          path: test-results
-
+          path: darkknight/android/app/build/outputs/bundle/release
+          destination: release-aab/
+      - store_artifacts:
+          path: darkknight/android/app/build/outputs/apk/release
+          destination: release-apk/
 
 workflows:
-  node-android-ios:
+  version: 2
+  build_and_test:
     jobs:
-      - node
-      - android-build-and-test:
-          requires:
-            - node
+      - android
