@@ -3,7 +3,7 @@ jobs:
   node:
     working_directory: ~/darkknight
     docker:
-      - image: cimg/node:12.16
+      - image: cimg/node:18.10.0
 
     steps:
       - checkout
