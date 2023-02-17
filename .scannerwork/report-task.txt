@@ -1,0 +1,6 @@
+projectKey=react-sonarqube-101
+serverUrl=https://sonarqube.alpha.blr.gluestack.app
+serverVersion=9.9.0.65466
+dashboardUrl=https://sonarqube.alpha.blr.gluestack.app/dashboard?id=react-sonarqube-101
+ceTaskId=AYZen07gmIpfUe2r3GqH
+ceTaskUrl=https://sonarqube.alpha.blr.gluestack.app/api/ce/task?id=AYZen07gmIpfUe2r3GqH
