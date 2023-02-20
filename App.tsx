@@ -32,7 +32,7 @@ const App = () => {
         onPress={() => {
           setTimeout(() => {
             setMessage("Hello Tester");
-          }, Math.floor(Math.random() * 200));
+          }, Math.floor( 200));
         }}
       />
       {message && (
